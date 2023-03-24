@@ -13,11 +13,13 @@ let RUNNING;
 
 let highestFitness;
 
+let rightPositions;
+
 function initVariables() {
-  target = "to be or not to be";
+  target = "to be or not to be?";
   // target = "zorba";
   populationSize = 1000;
-  mutationRate = 0.05;
+  mutationRate = 0.04;
 
   actual = "";
 
@@ -29,6 +31,8 @@ function initVariables() {
   RUNNING = true;
 
   highestFitness = { person: "", fitness: 0 };
+
+  rightPositions = [];
 }
 
 function randomNumber(min = 32, max = 127) {
@@ -59,8 +63,10 @@ function drawInfo() {
     Actual: ${highestFitness.person}
     
     Generations: ${generations} 
-    Generation Limit: ${generationLimit}
-    Mutation Rate: ${mutationRate * 100}%  
+
+    Mutation rate: ${mutationRate * 100}%  
+    Population size: ${populationSize}
+    Generation limit: ${generationLimit}
   `;
 }
 
@@ -85,7 +91,9 @@ function evaluateFitness() {
       if (person.charAt(i) === target.charAt(i)) fitness++;
     }
 
-    if (fitness > 0) populationFitness.push({ person, fitness });
+    // console.log({ fitness });
+
+    if (fitness > 1) populationFitness.push({ person, fitness });
     if (highestFitness.fitness < fitness) highestFitness = { person, fitness };
   });
 
@@ -100,10 +108,13 @@ function crossover(populationFitness) {
 
   const newPopulation = [];
 
+  rightPositions = [];
   for (let i = 0; i < populationSize; i++) {
     let person = "";
     const rand1 = Math.floor(Math.random() * populationAsPercent.length);
     const rand2 = Math.floor(Math.random() * populationAsPercent.length);
+
+    // console.log(rand2, populationAsPercent.length);
 
     const parent1 = populationAsPercent[rand1].person;
     const parent2 = populationAsPercent[rand2].person;
@@ -117,8 +128,14 @@ function crossover(populationFitness) {
 
     const mutate = Math.floor(Math.random() * 100) <= mutationRate * 100;
     if (mutate) {
+      let randPos = 0;
+
+      for (let trys = 2; trys > 0; trys--) {
+        randPos = randomNumber(0, target.length);
+        if (target.charAt(randPos) !== person.charAt(randPos)) break;
+      }
+
       const randChar = randomNumber();
-      const randPos = randomNumber(0, target.length);
       // console.log("before mutation: ", person);
       let personArray = person.split("");
       personArray[randPos] = String.fromCharCode(randChar);
