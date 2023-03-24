@@ -1,157 +1,176 @@
-let target = "to be or not to be";
-let populationSize = 1000;
-let mutationRate = 0.01;
+let target;
+let populationSize;
+let mutationRate;
 
-let generations = 0;
-let population = [];
+let actual;
 
-let better = { parent: "", score: 0 };
-let topfitness = [];
+let generations;
+let generationLimit;
 
-function clearScreen() {
-  console.clear();
+let population;
+
+let RUNNING;
+
+let highestFitness;
+
+function initVariables() {
+  target = "to be or not to be";
+  // target = "zorba";
+  populationSize = 1000;
+  mutationRate = 0.01;
+
+  actual = "";
+
+  generations = 0;
+  generationLimit = 5000;
+
+  population = [];
+
+  RUNNING = true;
+
+  highestFitness = { person: "", fitness: 0 };
 }
 
-function randomNumber(min, max) {
-  const charCode = Math.floor(Math.random() * (max - min)) + min;
-  return charCode;
+function randomNumber(min = 32, max = 127) {
+  const num = Math.floor(Math.random() * (max - min)) + min;
+  return num;
 }
 
-function newPopulation() {
-  const newPopulation = [];
-  "."
-    .repeat(populationSize)
-    .split("")
-    .forEach(() => {
-      const person = [];
-      [...target.split("")].forEach(() => {
-        const charCode = randomNumber(32, 126);
-        const leter = String.fromCharCode([charCode]);
-        person.push(leter);
-      });
-      newPopulation.push(person.join(""));
-    });
-  return newPopulation;
+function randomPopulation() {
+  for (let i = 0; i < populationSize; i++) {
+    const size = target.length;
+    let person = "";
+
+    for (let l = 0; l < size; l++) {
+      person += String.fromCharCode(randomNumber());
+    }
+
+    population.push(person);
+  }
+  // console.log(population);
 }
 
-function setup() {
-  population = newPopulation();
+function drawInfo() {
+  generations += 1;
+  const info = document.getElementsByClassName("data")[0];
+  info.innerText = `
+    Target: ${target}
+
+    Actual: ${highestFitness.person}
+    
+    Generations: ${generations} 
+    Generation Limit: ${generationLimit}
+    Mutation Rate: ${mutationRate * 100}%  
+  `;
 }
 
 function drawPopulation() {
   const right = document.getElementsByClassName("right")[0];
-  right.innerHTML = null;
-
+  let text = "";
   population.forEach((person, index) => {
-    const row = document.createElement("div");
-    row.innerText = `${index < 10 ? `0${index}` : index}) ${person}`;
-    right.append(row);
+    text += `
+    ${index + 1 < 10 ? `0${index + 1}` : index + 1}) ${person}`;
   });
-}
-
-function crossover(fitness) {
-  const percentPop = [];
-  const found = false;
-  fitness.forEach(({ person, score }) => {
-    if (score <= 1) return;
-    if (score > better?.score) {
-      better = { person, score };
-      topfitness.push(better);
-    }
-
-    if (person === target) {
-      found = true;
-      return;
-    }
-    for (let qtd = 0; qtd < score; qtd++) {
-      percentPop.push(person);
-    }
-  });
-  // console.log(percentPop);
-
-  const newPopulation = [];
-  "."
-    .repeat(populationSize)
-    .split("")
-    .forEach(() => {
-      const indexParent1 = randomNumber(0, percentPop.length);
-      const parent1 = "" + percentPop[indexParent1];
-
-      const indexParent2 = randomNumber(0, percentPop.length);
-      const parent2 = "" + percentPop[indexParent2];
-
-      // console.log(indexParent1, indexParent2);
-      // console.log({ parent1 }, { parent2 });
-
-      const size1 = Math.floor(parent1.length / 2);
-      const size2 = Math.floor(parent2.length / 2);
-
-      const person = parent1.substring(0, size1) + parent2.substring(0, size2);
-      // console.log(`
-      //   ${parent1.substring(0, size1)} -
-      //   ${parent2.substring(0, size2)} -
-      //   ${person}
-      // `);
-      newPopulation.push(person);
-    });
-
-  population = newPopulation;
-
-  if (found || generations >= 5) return;
-  setTimeout(() => {
-    draw();
-  }, 10);
+  right.innerText = text;
 }
 
 function evaluateFitness() {
-  const fitness = [];
+  const populationFitness = [];
+
   population.forEach((person) => {
-    let score = [];
-    person.split("").forEach((pLeter) => {
-      target.split("").forEach((tLeter) => {
-        const p = pLeter.toLowerCase();
-        const t = tLeter.toLowerCase();
-        if (p === t) score.includes(p) ? null : score.push(p);
-      });
-    });
-    fitness.push({ person, score: score.length });
+    let fitness = 0;
+
+    for (let i = 0; i < target.length; i++) {
+      if (String(person).includes(target[i])) fitness++;
+      if (person.charAt(i) === target.charAt(i)) fitness++;
+    }
+
+    if (fitness > 0) populationFitness.push({ person, fitness });
+    if (highestFitness.fitness < fitness) highestFitness = { person, fitness };
   });
 
-  // console.log(fitness);
-  crossover(fitness);
+  return populationFitness;
 }
 
-function drawInfo() {
-  const data = document.getElementsByClassName("data")[0];
-  data.innerHTML = `
-    Target: ${target}
-    <br/>
-    <br/>
-    Mutation Rate: ${mutationRate * 100}% 
-    <br/>
-    Generations: ${generations} 
-    <br/>
-    Actual: ${better.person} ${better.score} 
-    <br/>
-    ${JSON.stringify(topfitness)}
-  `;
+function crossover(populationFitness) {
+  const populationAsPercent = [];
+  for (let i = 0; i < populationFitness.length; i++)
+    for (let l = 0; l < populationFitness[i].fitness; l++)
+      populationAsPercent.push(populationFitness[i]);
+
+  const newPopulation = [];
+
+  for (let i = 0; i < populationSize; i++) {
+    let person = "";
+    const rand1 = Math.floor(Math.random() * populationAsPercent.length);
+    const rand2 = Math.floor(Math.random() * populationAsPercent.length);
+
+    const parent1 = populationAsPercent[rand1].person;
+    const parent2 = populationAsPercent[rand2].person;
+
+    const size1 = Math.floor(parent1.length / 2);
+
+    const first = parent1.substring(0, size1);
+    const second = parent2.substring(size1);
+
+    person = first + second;
+
+    const mutate = Math.floor(Math.random() * 100) <= mutationRate * 100;
+    if (mutate) {
+      const randChar = randomNumber();
+      const randPos = randomNumber(0, target.length);
+      // console.log("before mutation: ", person);
+      let personArray = person.split("");
+      personArray[randPos] = String.fromCharCode(randChar);
+      person = personArray.join("");
+      // console.log("after mutation: ", person);
+    }
+
+    newPopulation.push(person);
+  }
+
+  population = newPopulation;
 }
 
-function draw() {
-  generations += 1;
-  drawPopulation();
+function throwErrorIfFitnessNotFound(populationFitness) {
+  if (!populationFitness?.length)
+    throw new Error("Error: !!!!! Not fitness found !!!!!");
+}
+
+function init() {
+  const populationFitness = evaluateFitness();
+  throwErrorIfFitnessNotFound(populationFitness);
+
+  crossover(populationFitness);
+
   drawInfo();
-  evaluateFitness();
+  drawPopulation();
+
+  setTimeout(() => {
+    if (
+      RUNNING &&
+      generations < generationLimit &&
+      highestFitness.person !== target
+    )
+      init();
+    else if (highestFitness.person === target) RUNNING = false;
+  }, 10);
 }
 
-clearScreen();
+function setStop() {
+  const button = document.getElementById("switch");
+  button.addEventListener("click", () => {
+    if (RUNNING) RUNNING = false;
+    else setup();
+  });
+}
+
+function setup() {
+  console.clear();
+  initVariables();
+  randomPopulation();
+  init();
+}
+
+setStop();
 setup();
-draw();
-
-// population.forEach((person, index) => {
-//   console.log(index, person, person.length);
-// });
-
-for (let x = 0; x < 3; x++) {
-  // console.log(123);
-}
