@@ -17,7 +17,7 @@ function initVariables() {
   target = "to be or not to be";
   // target = "zorba";
   populationSize = 1000;
-  mutationRate = 0.01;
+  mutationRate = 0.05;
 
   actual = "";
 
