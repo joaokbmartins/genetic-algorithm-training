@@ -4,6 +4,8 @@ class Start {
   widthInput;
   heightInput;
 
+  needUpdateFieldPosition = false;
+
   constructor() {
     this.field = document.getElementById("field");
     this.drawGrid();
@@ -34,6 +36,7 @@ class Start {
   }
 
   updateFieldWidth({ value }) {
+    this.needUpdateFieldPosition = true;
     const height = this.field.clientHeight;
     this.field.setAttribute(
       "style",
@@ -45,6 +48,7 @@ class Start {
   }
 
   updateFieldHeight({ value }) {
+    this.needUpdateFieldPosition = true;
     const wwidth = this.field.clientWidth;
     this.field.setAttribute(
       "style",
@@ -93,6 +97,10 @@ main.drawVehicle(car.vehicle);
 
 function draw() {
   car.draw();
+  if (main.needUpdateFieldPosition) {
+    main.needUpdateFieldPosition = false;
+    car.updateFildSize(main.fieldPosition);
+  }
   setTimeout(() => draw(), 100);
 }
 

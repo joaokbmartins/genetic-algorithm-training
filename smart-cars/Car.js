@@ -15,6 +15,14 @@ class Car {
     this.setupCar();
   }
 
+  updateFildSize(fieldPosition) {
+    this.position = {
+      x: this.fieldPosition.x + 1,
+      y: this.fieldPosition.y + 1,
+    };
+    this.fieldPosition = fieldPosition;
+  }
+
   setupCar() {
     this.position = {
       x: this.fieldPosition.x + 1,
@@ -81,6 +89,8 @@ class Car {
         position: absolute;
         top: ${this.position.y}px;
         left: ${this.position.x}px;
+        border-radius: 0 100px 100px 0;
+        box-shadow: white 0px 0px 11px 1px;
       `
     );
   }
