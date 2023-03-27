@@ -1,6 +1,10 @@
 * {
   margin: 0px;
   padding: 0px;
+  font-family: sans-serif;
+  color: rgb(43, 43, 43);
+  letter-spacing: 1px;
+  font-weight: 700;
 }
 
 body {
@@ -13,7 +17,6 @@ button {
   background-color: lightblue;
   padding: 4px;
   font-size: 10px;
-  font-family: "arial";
   text-align: center;
   cursor: pointer;
   border-radius: 100px;
@@ -36,9 +39,9 @@ button:hover {
 }
 
 #field {
-  width: calc((11px * 5) + 12px);
-  height: calc((11px * 5) + 12px);
   background-color: #fff;
+  width: calc((11px * 60) + 12px);
+  height: calc((11px * 34) + 12px);
 
   background-image: repeating-linear-gradient(
       rgb(100, 85, 0) 0 1px,
@@ -66,7 +69,7 @@ button:hover {
   align-items: center;
   padding: 1rem 0;
   width: 50%;
-  margin-right: 1rem;
+  margin-left: 1rem;
 }
 
 .row {
@@ -81,17 +84,27 @@ button:hover {
   justify-content: center;
 }
 
-.inputs {
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-}
-
 input {
   all: unset;
   background-color: lightcyan;
   border: 1px solid lightpink;
   padding: 8px 1rem;
   border-radius: 4px;
-  font-family: arial;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  justify-content: CENTER;
+  width: 50%;
+}
+
+.car {
+  display: flex;
+  background-color: blue;
+  height: 10px;
+  width: 10px;
+  position: absolute;
+  border-radius: 0 100px 100px 0;
+  box-shadow: white 0px 0px 11px 1px;
 }
