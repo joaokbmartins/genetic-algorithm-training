@@ -13,6 +13,7 @@ class Car {
   constructor(fieldPosition) {
     this.fieldPosition = fieldPosition;
     this.setupCar();
+    this.addKeyListeners();
   }
 
   updateFildSize(fieldPosition) {
@@ -46,14 +47,22 @@ class Car {
     this.moviments.right.addEventListener("click", () => this.move("right"));
   }
 
+  addKeyListeners() {
+    document.addEventListener("keyup", ({ code }) => {
+      this.move(code);
+    });
+  }
+
   move(direction) {
     switch (direction) {
       case "up":
+      case "ArrowUp":
         if (this.position.y <= this.fieldPosition.y + 1) return;
         this.position.y -= 11;
         break;
 
       case "right":
+      case "ArrowRight":
         if (
           this.position.x >=
           this.fieldPosition.length.x + this.fieldPosition.x - 11
@@ -63,6 +72,7 @@ class Car {
         break;
 
       case "down":
+      case "ArrowDown":
         if (
           this.position.y >=
           this.fieldPosition.length.y + this.fieldPosition.y - 11
@@ -72,6 +82,7 @@ class Car {
         break;
 
       case "left":
+      case "ArrowLeft":
         if (this.position.x <= this.fieldPosition.x + 1) return;
         this.position.x -= 11;
         break;
