@@ -1,0 +1,97 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+body {
+  background-color: rgb(175, 175, 175);
+  padding: 1rem;
+}
+
+button {
+  all: unset;
+  background-color: lightblue;
+  padding: 4px;
+  font-size: 10px;
+  font-family: "arial";
+  text-align: center;
+  cursor: pointer;
+  border-radius: 100px;
+  width: 35px;
+  height: 2rem;
+}
+
+button:hover {
+  background-color: rgb(152, 192, 206);
+}
+
+.container {
+  display: flex;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#field {
+  width: calc((11px * 5) + 12px);
+  height: calc((11px * 5) + 12px);
+  background-color: #fff;
+
+  background-image: repeating-linear-gradient(
+      rgb(100, 85, 0) 0 1px,
+      transparent 1px 100%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgb(100, 85, 0) 0 1px,
+      transparent 1px 100%
+    );
+  background-size: 11px 11px;
+  background-color: black;
+}
+
+.config {
+  display: flex;
+  width: 412px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  border-radius: 100px;
+  background-color: lightcoral;
+  align-items: center;
+  padding: 1rem 0;
+  width: 50%;
+  margin-right: 1rem;
+}
+
+.row {
+  display: flex;
+}
+
+.col {
+  min-width: 50px;
+  min-height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+
+input {
+  all: unset;
+  background-color: lightcyan;
+  border: 1px solid lightpink;
+  padding: 8px 1rem;
+  border-radius: 4px;
+  font-family: arial;
+}

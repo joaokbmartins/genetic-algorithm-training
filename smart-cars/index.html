@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <title>Smart Cars</title>
+  <head>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="content">
+        <div class="config">
+          <div class="actions">
+            <div class="row">
+              <div class="col">
+                <button id="up">UP</button>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <button id="left">LEFT</button>
+              </div>
+
+              <div class="col"></div>
+
+              <div class="col">
+                <button id="right">RIGHT</button>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <button id="down">DOWN</button>
+              </div>
+            </div>
+          </div>
+
+          <br />
+
+          <div class="inputs">
+            <input type="number" id="width" placeholder="Width" min="1" />
+
+            <br />
+
+            <input type="number" id="height" placeholder="Height" min="1" />
+          </div>
+        </div>
+
+        <br />
+
+        <div id="field"></div>
+      </div>
+    </div>
+
+    <script src="DNA.js"></script>
+    <script src="Population.js"></script>
+    <script src="Car.js"></script>
+    <script src="Start.js"></script>
+  </body>
+</html>
