@@ -38,9 +38,9 @@ button:hover {
   justify-content: center;
 }
 
-#field {
+#ground {
   background-color: #fff;
-  width: calc((11px * 60) + 12px);
+  width: calc((11px * 59) + 12px);
   height: calc((11px * 34) + 12px);
 
   background-image: repeating-linear-gradient(

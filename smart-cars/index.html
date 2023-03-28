@@ -17,6 +17,8 @@
               value="60"
               placeholder="Width"
               min="1"
+              onfocus="INPUT_FOCUSED = true"
+              onblur="INPUT_FOCUSED = false"
             />
 
             <br />
@@ -28,6 +30,8 @@
               value="35"
               placeholder="Height"
               min="1"
+              onfocus="INPUT_FOCUSED = true"
+              onblur="INPUT_FOCUSED = false"
             />
           </div>
 
@@ -62,13 +66,14 @@
 
         <br />
 
-        <div id="field"></div>
+        <div id="ground"></div>
       </div>
     </div>
 
+    <script src="Ground.js"></script>
+    <script src="Car.js"></script>
     <script src="DNA.js"></script>
     <script src="Population.js"></script>
-    <script src="Car.js"></script>
     <script src="Start.js"></script>
   </body>
 </html>

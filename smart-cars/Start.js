@@ -1,66 +1,46 @@
 class Start {
-  car;
   grid = [];
-  widthInput;
-  heightInput;
+  needUpdateGroundPosition = false;
 
-  needUpdateFieldPosition = false;
+  car = null;
+  ground = null;
 
-  constructor() {
-    this.field = document.getElementById("field");
-    this.drawGrid();
-    this.setupInputListeners();
+  widthInputField = null;
+  heightInputField = null;
+
+  constructor(ground) {
+    this.ground = ground;
+    this.setupInputFieldListeners();
+    this.createSizeEvents();
   }
 
-  drawGrid() {
-    this.grid = document.createElement("div");
-  }
+  setupInputFieldListeners() {
+    this.widthInputField = document.getElementById("width");
+    this.heightInputField = document.getElementById("height");
 
-  setupInputListeners() {
-    this.widthInput = document.getElementById("width");
-    this.heightInput = document.getElementById("height");
-
-    this.widthInput.addEventListener("change", ({ target }) =>
-      this.updateFieldWidth(target)
+    this.widthInputField.addEventListener("change", ({ target }) =>
+      this.updateGroundWidth(target)
     );
-    this.heightInput.addEventListener("change", ({ target }) =>
-      this.updateFieldHeight(target)
+    this.heightInputField.addEventListener("change", ({ target }) =>
+      this.updateGroundHeight(target)
     );
 
-    this.widthInput.addEventListener("keyup", ({ target }) =>
-      this.updateFieldWidth(target)
+    this.widthInputField.addEventListener("keyup", ({ target }) =>
+      this.updateGroundWidth(target)
     );
-    this.heightInput.addEventListener("keyup", ({ target }) =>
-      this.updateFieldHeight(target)
-    );
-  }
-
-  updateFieldWidth({ value }) {
-    this.needUpdateFieldPosition = true;
-    const height = this.field.clientHeight;
-    this.field.setAttribute(
-      "style",
-      `
-        width: calc((11px * ${value - 1}) + 12px);
-        height: ${height}px;
-      `
+    this.heightInputField.addEventListener("keyup", ({ target }) =>
+      this.updateGroundHeight(target)
     );
   }
 
-  updateFieldHeight({ value }) {
-    this.needUpdateFieldPosition = true;
-    const wwidth = this.field.clientWidth;
-    this.field.setAttribute(
-      "style",
-      `
-        height: calc((11px * ${value - 1}) + 12px);
-        width: ${wwidth}px;
-      `
-    );
+  updateGroundWidth({ value }) {
+    console.log(this.widthInputField);
+    console.log(this.widthInputField.focused);
+    this.ground.updateGroundWidth(value);
   }
 
-  drawVehicle(vehicle) {
-    this.field.append(vehicle);
+  updateGroundHeight({ value }) {
+    this.ground.updateGroundHeight(value);
   }
 
   get movementButtons() {
@@ -72,40 +52,28 @@ class Start {
     };
   }
 
-  get fieldPosition() {
-    return {
-      length: {
-        x: this.field.offsetWidth,
-        y: this.field.offsetHeight,
-      },
-      x: this.field.offsetLeft,
-      y: this.field.offsetTop,
-    };
-  }
-
-  main() {
-    //
-  }
+  createSizeEvents() {}
 }
 
-const main = new Start();
-const car = new Car(main.fieldPosition);
+INPUT_FOCUSED = false;
 
-car.setControllers(main.movementButtons);
+GROUND_TILE = 11;
+EVEN_TILE_CORRECTION = 5;
+FONT_CORRECTION = 1.4;
+GRID_WIDTH = 1;
 
-main.drawVehicle(car.vehicle);
+const ground = new Ground();
+
+const main = new Start(ground);
+
+const GROUND_LOCATION = main.groundLocation;
+const GROUND = main.ground;
+
+const dna = new DNA(main.movementButtons);
 
 function draw() {
-  car.draw();
-  if (main.needUpdateFieldPosition) {
-    main.needUpdateFieldPosition = false;
-    car.updateFildSize(main.fieldPosition);
-  }
+  dna.draw();
   setTimeout(() => draw(), 100);
 }
 
 draw();
-
-// function run() {
-//   main.drawGrid();
-// }

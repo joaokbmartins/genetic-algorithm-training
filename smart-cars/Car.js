@@ -1,8 +1,10 @@
 class Car {
-  car;
+  element;
   position = { x: 0, y: 0 };
-  fieldPosition = { x: 0, y: 0 };
 
+  boundaries = null;
+
+  START_COLUMN = 3;
   moviments = {
     up: null,
     down: null,
@@ -10,25 +12,37 @@ class Car {
     right: null,
   };
 
-  GRID_TILE = 11;
-  EVEN_TILE_CORRECTION = 5;
-  FONT_CORRECTION = 1.4;
+  constructor(boundaries, controllers) {
+    this.element = document.createElement("span");
+    this.boundaries = boundaries;
 
-  constructor(fieldPosition) {
-    this.fieldPosition = fieldPosition;
-    this.setupCar();
+    this.addClass();
+    this.setControllers(controllers);
     this.addKeyListeners();
+    this.setInitialPosition();
+    this.setCarLocationStyle();
   }
 
-  updateFildSize(fieldPosition) {
-    this.fieldPosition = fieldPosition;
+  addClass() {
+    this.element.setAttribute("class", "car");
+  }
+
+  setInitialPosition() {
     this.resetCarPosition();
   }
 
-  setupCar() {
+  updateGroundSize(groundLocation) {
+    this.groundLocation = groundLocation;
     this.resetCarPosition();
-    this.car = document.createElement("span");
-    this.car.setAttribute("class", "car");
+  }
+
+  resetCarPosition() {
+    const [position, size] = [this.boundaries.location, this.boundaries.size];
+    let x = GRID_WIDTH + position.x + GROUND_TILE * this.START_COLUMN;
+    let y =
+      position.y + Math.floor(size.height / 2) + FONT_CORRECTION - GROUND_TILE;
+    if (size.height % 2 === 0) y += EVEN_TILE_CORRECTION;
+    this.position = { x, y };
   }
 
   setControllers(controllers) {
@@ -39,70 +53,8 @@ class Car {
     this.addMovements();
   }
 
-  addMovements() {
-    this.moviments.up.addEventListener("click", () => this.move("up"));
-    this.moviments.down.addEventListener("click", () => this.move("down"));
-    this.moviments.left.addEventListener("click", () => this.move("left"));
-    this.moviments.right.addEventListener("click", () => this.move("right"));
-  }
-
-  addKeyListeners() {
-    document.addEventListener("keyup", ({ code }) => {
-      this.move(code);
-    });
-  }
-
-  move(direction) {
-    switch (direction) {
-      case "up":
-      case "ArrowUp":
-        if (this.position.y <= this.fieldPosition.y + this.GRID_TILE + 1)
-          return;
-        this.position.y -= this.GRID_TILE;
-        break;
-
-      case "right":
-      case "ArrowRight":
-        if (
-          this.position.x >=
-          this.fieldPosition.length.x + this.fieldPosition.x - this.GRID_TILE
-        )
-          return;
-        this.position.x += this.GRID_TILE;
-        break;
-
-      case "down":
-      case "ArrowDown":
-        if (
-          this.position.y >=
-          this.fieldPosition.length.y + this.fieldPosition.y - this.GRID_TILE
-        )
-          return;
-        this.position.y += this.GRID_TILE;
-        break;
-
-      case "left":
-      case "ArrowLeft":
-        if (this.position.x <= this.fieldPosition.x + 1) return;
-        this.position.x -= this.GRID_TILE;
-        break;
-    }
-  }
-
-  resetCarPosition() {
-    let y =
-      this.fieldPosition.y +
-      Math.floor(this.fieldPosition.length.y / 2) +
-      this.FONT_CORRECTION -
-      this.GRID_TILE;
-
-    if (this.fieldPosition.length.y % 2 === 0) y += this.EVEN_TILE_CORRECTION;
-
-    this.position = { x: 49 + 1, y };
-  }
-
-  draw() {
-    this.car.setAttribute(
+  setCarLocationStyle() {
+    this.element.setAttribute(
       "style",
       `
         top: ${this.position.y}px;
@@ -111,20 +63,57 @@ class Car {
     );
   }
 
-  get vehicle() {
-    return this.car;
+  addMovements() {
+    this.moviments.up.addEventListener("click", () => this.moveUp);
+    this.moviments.right.addEventListener("click", () => this.moveRight);
+    this.moviments.down.addEventListener("click", () => this.moveDown);
+    this.moviments.left.addEventListener("click", () => this.moveLeft);
+  }
+
+  addKeyListeners() {
+    document.addEventListener("keyup", ({ code }) => {
+      if (INPUT_FOCUSED) return;
+      switch (code) {
+        case "ArrowUp":
+          return this.moveUp;
+
+        case "ArrowRight":
+          return this.moveRight;
+
+        case "ArrowDown":
+          return this.moveDown;
+
+        case "ArrowLeft":
+          return this.moveLeft;
+      }
+    });
+  }
+
+  get moveUp() {
+    if (this.position.y <= this.boundaries.location.y + GROUND_TILE + 1) return;
+    this.position.y -= GROUND_TILE;
+  }
+
+  get moveRight() {
+    if (
+      this.position.x >=
+      this.boundaries.size.width + this.boundaries.location.x - GROUND_TILE
+    )
+      return;
+    this.position.x += GROUND_TILE;
+  }
+
+  get moveDown() {
+    if (
+      this.position.y >=
+      this.boundaries.size.height + this.boundaries.location.y - GROUND_TILE
+    )
+      return;
+    this.position.y += GROUND_TILE;
+  }
+
+  get moveLeft() {
+    if (this.position.x <= this.boundaries.location.x + 1) return;
+    this.position.x -= GROUND_TILE;
   }
 }
-
-// const car = new Car();
-// car.draw();
-
-// function draw() {
-//   console.log("aui");
-//   setTimeout(() => {
-//     console.clear();
-//     draw();
-//   }, 1000);
-// }
-
-// draw();
