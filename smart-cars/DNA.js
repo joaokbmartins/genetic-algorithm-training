@@ -19,18 +19,16 @@ class DNA {
   }
 
   randomMove() {
-    for (let i = 0; i < this.moveCount; i++) {
-      const direction = Math.floor(Math.random() * 4);
-      switch (direction) {
-        case 0:
-          return this.car.moveUp;
-        case 1:
-          return this.car.moveRight;
-        case 2:
-          return this.car.moveDown;
-        case 3:
-          return this.car.moveLeft;
-      }
+    const direction = Math.floor(Math.random() * 4);
+    switch (direction) {
+      case 0:
+        return this.car.moveUp;
+      case 1:
+        return this.car.moveRight;
+      case 2:
+        return this.car.moveDown;
+      case 3:
+        return this.car.moveLeft;
     }
   }
 
@@ -42,6 +40,7 @@ class DNA {
   }
 
   draw() {
+    this.randomMove();
     this.car.setCarLocationStyle();
   }
 }
