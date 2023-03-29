@@ -6,7 +6,7 @@ class DNA {
   moveCount = 50;
 
   constructor(controllers) {
-    this.watchGroundSizeUpdate();
+    this.listenGroundResize();
     this.car = new Car(this.boundaries, controllers);
     GROUND.addElement(this.car.element);
   }
@@ -32,8 +32,8 @@ class DNA {
     }
   }
 
-  watchGroundSizeUpdate() {
-    document.addEventListener("ground-size-update", ({ detail }) => {
+  listenGroundResize() {
+    document.addEventListener("ground-resized", ({ detail }) => {
       this.car.boundaries = this.boundaries;
       this.car.resetCarPosition();
     });
