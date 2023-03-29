@@ -37,11 +37,12 @@ class Car {
   }
 
   resetCarPosition() {
-    const [position, size] = [this.boundaries.location, this.boundaries.size];
-    let x = GRID_WIDTH + position.x + GROUND_TILE * this.START_COLUMN;
-    let y =
-      position.y + Math.floor(size.height / 2) + FONT_CORRECTION - GROUND_TILE;
-    if (size.height % 2 === 0) y += EVEN_TILE_CORRECTION;
+    const MIDDLE = 2;
+    const { height } = this.boundaries.size;
+
+    const x = GRID_WIDTH + this.START_COLUMN * TILE;
+    const y = GRID_WIDTH + Math.floor(height / TILE / MIDDLE) * TILE;
+
     this.position = { x, y };
   }
 
@@ -90,30 +91,22 @@ class Car {
   }
 
   get moveUp() {
-    if (this.position.y <= this.boundaries.location.y + GROUND_TILE + 1) return;
-    this.position.y -= GROUND_TILE;
+    if (this.position.y <= TILE) return;
+    this.position.y -= TILE;
   }
 
   get moveRight() {
-    if (
-      this.position.x >=
-      this.boundaries.size.width + this.boundaries.location.x - GROUND_TILE
-    )
-      return;
-    this.position.x += GROUND_TILE;
+    if (this.position.x + TILE >= this.boundaries.size.width) return;
+    this.position.x += TILE;
   }
 
   get moveDown() {
-    if (
-      this.position.y >=
-      this.boundaries.size.height + this.boundaries.location.y - GROUND_TILE
-    )
-      return;
-    this.position.y += GROUND_TILE;
+    if (this.position.y + TILE >= this.boundaries.size.height) return;
+    this.position.y += TILE;
   }
 
   get moveLeft() {
-    if (this.position.x <= this.boundaries.location.x + 1) return;
-    this.position.x -= GROUND_TILE;
+    if (this.position.x <= TILE) return;
+    this.position.x -= TILE;
   }
 }
