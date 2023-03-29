@@ -1,14 +1,43 @@
 class Ground {
   element = null;
+  target = null;
+
   width = 0;
   height = 0;
 
   constructor() {
     this.readGroundElement();
+    this.addTarget();
+    this.listenGroundResize();
   }
 
   readGroundElement() {
     this.element = document.getElementById("ground");
+  }
+
+  listenGroundResize() {
+    document.addEventListener("ground-resized", (event) => {
+      this.setTargetInitialPosition();
+    });
+  }
+
+  addTarget() {
+    this.target = new Target();
+    this.addElement(this.target.element);
+    this.setTargetInitialPosition();
+  }
+
+  setTargetInitialPosition() {
+    const MIDDLE = 2;
+    const { width, height } = this.size;
+
+    console.log(height, height / 2, Math.floor(height / 2));
+
+    const position = {
+      x: width - TILE * 5,
+      y: GRID_WIDTH + Math.floor(height / TILE / MIDDLE) * TILE,
+    };
+    this.target.updatePosition(position);
   }
 
   addElement(element) {
@@ -29,9 +58,9 @@ class Ground {
     };
   }
 
-  emitUpdatedGroundSize(value) {
+  emitGroundResize(value) {
     const detail = { detail: value };
-    const groundSizeEvent = new CustomEvent("ground-size-update", detail);
+    const groundSizeEvent = new CustomEvent("ground-resized", detail);
     document.dispatchEvent(groundSizeEvent);
   }
 
@@ -45,7 +74,7 @@ class Ground {
         height: ${height}px;
       `
     );
-    this.emitUpdatedGroundSize({ width });
+    this.emitGroundResize({ width });
   }
 
   updateGroundHeight(height) {
@@ -58,6 +87,6 @@ class Ground {
         width: ${wwidth}px;
       `
     );
-    this.emitUpdatedGroundSize({ height });
+    this.emitGroundResize({ height });
   }
 }
