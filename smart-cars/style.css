@@ -41,8 +41,8 @@ button:hover {
 #ground {
   display: flex;
   position: relative;
-  width: calc((11px * 59) + 12px);
-  height: calc((11px * 34) + 12px);
+  width: calc((11px * 49) + 12px);
+  height: calc((11px * 19) + 12px);
 
   background-image: repeating-linear-gradient(
       rgb(255, 255, 255) 0 1px,

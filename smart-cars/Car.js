@@ -12,22 +12,25 @@ class Car {
     right: null,
   };
 
-  constructor(boundaries, controllers) {
+  constructor(boundaries) {
+    if (!boundaries) return;
     this.element = document.createElement("span");
     this.boundaries = boundaries;
 
-    this.addClass();
-    this.setControllers(controllers);
-    this.addKeyListeners();
-    this.setInitialPosition();
-    this.setCarLocationStyle();
+    this.#addClass();
+    this.#setMovementButtons();
+    this.#addKeyListeners();
+    this.#addButtonsListeners();
+    this.#listenGroundResize();
+    this.#setInitialPosition();
+    this.#setCarLocationStyle();
   }
 
-  addClass() {
+  #addClass() {
     this.element.setAttribute("class", "car");
   }
 
-  setInitialPosition() {
+  #setInitialPosition() {
     this.resetCarPosition();
   }
 
@@ -46,15 +49,21 @@ class Car {
     this.position = { x, y };
   }
 
-  setControllers(controllers) {
-    this.moviments.up = controllers.up;
-    this.moviments.down = controllers.down;
-    this.moviments.left = controllers.left;
-    this.moviments.right = controllers.right;
-    this.addMovements();
+  #setMovementButtons() {
+    this.moviments.up = document.getElementById("btnUp");
+    this.moviments.down = document.getElementById("btnDown");
+    this.moviments.left = document.getElementById("btnLeft");
+    this.moviments.right = document.getElementById("btnRight");
   }
 
-  setCarLocationStyle() {
+  #listenGroundResize() {
+    document.addEventListener("ground-resize", ({ detail }) => {
+      console.log(" >>> ", { detail });
+      this.resetCarPosition();
+    });
+  }
+
+  #setCarLocationStyle() {
     this.element.setAttribute(
       "style",
       `
@@ -64,14 +73,22 @@ class Car {
     );
   }
 
-  addMovements() {
+  moveToPosition({ x, y }) {
+    this.element.setAttribute("style", `top: ${y}px; left: ${x}px;`);
+  }
+
+  updatePosition() {
+    this.#setCarLocationStyle();
+  }
+
+  #addButtonsListeners() {
     this.moviments.up.addEventListener("click", () => this.moveUp);
     this.moviments.right.addEventListener("click", () => this.moveRight);
     this.moviments.down.addEventListener("click", () => this.moveDown);
     this.moviments.left.addEventListener("click", () => this.moveLeft);
   }
 
-  addKeyListeners() {
+  #addKeyListeners() {
     document.addEventListener("keyup", ({ code }) => {
       if (INPUT_FOCUSED) return;
       switch (code) {

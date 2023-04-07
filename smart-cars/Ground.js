@@ -16,7 +16,7 @@ class Ground {
   }
 
   listenGroundResize() {
-    document.addEventListener("ground-resized", (event) => {
+    document.addEventListener("ground-resize", (event) => {
       this.setTargetInitialPosition();
     });
   }
@@ -30,8 +30,6 @@ class Ground {
   setTargetInitialPosition() {
     const MIDDLE = 2;
     const { width, height } = this.size;
-
-    console.log(height, height / 2, Math.floor(height / 2));
 
     const position = {
       x: width - TILE * 5,
@@ -60,33 +58,19 @@ class Ground {
 
   emitGroundResize(value) {
     const detail = { detail: value };
-    const groundSizeEvent = new CustomEvent("ground-resized", detail);
+    const groundSizeEvent = new CustomEvent("ground-resize", detail);
     document.dispatchEvent(groundSizeEvent);
   }
 
-  updateGroundWidth(width) {
+  updateGround({ width, height }) {
     this.needUpdateGroundPosition = true;
-    const height = this.element.clientHeight;
     this.element.setAttribute(
       "style",
       `
         width: calc((11px * ${width - 1}) + 12px);
-        height: ${height}px;
-      `
-    );
-    this.emitGroundResize({ width });
-  }
-
-  updateGroundHeight(height) {
-    this.needUpdateGroundPosition = true;
-    const wwidth = this.element.clientWidth;
-    this.element.setAttribute(
-      "style",
-      `
         height: calc((11px * ${height - 1}) + 12px);
-        width: ${wwidth}px;
       `
     );
-    this.emitGroundResize({ height });
+    this.emitGroundResize({ width, height });
   }
 }

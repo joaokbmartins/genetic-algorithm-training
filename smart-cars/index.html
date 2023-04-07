@@ -13,10 +13,10 @@
             <small>Width:</small>
             <input
               type="number"
-              id="width"
-              value="60"
+              id="formWidth"
+              value="50"
               placeholder="Width"
-              min="1"
+              min="15"
               onfocus="INPUT_FOCUSED = true"
               onblur="INPUT_FOCUSED = false"
             />
@@ -26,39 +26,44 @@
             <small>Height:</small>
             <input
               type="number"
-              id="height"
-              value="35"
+              id="formHeight"
+              value="20"
               placeholder="Height"
-              min="1"
+              min="15"
               onfocus="INPUT_FOCUSED = true"
               onblur="INPUT_FOCUSED = false"
             />
           </div>
 
-          <br />
+          <div style="padding: 1rem">
+            <button style="width: 60px" id="btnContinue">CONTINUE</button>
+            <br />
+            <br />
+            <button style="width: 60px" id="btnFitness">Fitness</button>
+          </div>
 
           <div class="actions">
             <div class="row">
               <div class="col">
-                <button id="up">UP</button>
+                <button id="btnUp">UP</button>
               </div>
             </div>
 
             <div class="row">
               <div class="col">
-                <button id="left">LEFT</button>
+                <button id="btnLeft">LEFT</button>
               </div>
 
               <div class="col"></div>
 
               <div class="col">
-                <button id="right">RIGHT</button>
+                <button id="btnRight">RIGHT</button>
               </div>
             </div>
 
             <div class="row">
               <div class="col">
-                <button id="down">DOWN</button>
+                <button id="btnDown">DOWN</button>
               </div>
             </div>
           </div>
@@ -71,9 +76,9 @@
     </div>
 
     <script src="Target.js"></script>
+    <script src="DNA.js"></script>
     <script src="Ground.js"></script>
     <script src="Car.js"></script>
-    <script src="DNA.js"></script>
     <script src="Population.js"></script>
     <script src="Start.js"></script>
   </body>

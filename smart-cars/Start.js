@@ -2,7 +2,6 @@ class Start {
   grid = [];
   needUpdateGroundPosition = false;
 
-  car = null;
   ground = null;
 
   widthInputField = null;
@@ -14,8 +13,8 @@ class Start {
   }
 
   setupInputFieldListeners() {
-    this.widthInputField = document.getElementById("width");
-    this.heightInputField = document.getElementById("height");
+    this.widthInputField = document.getElementById("formWidth");
+    this.heightInputField = document.getElementById("formHeight");
 
     this.onChange();
     this.onKeyUp();
@@ -42,23 +41,20 @@ class Start {
   }
 
   updateGroundWidth({ value }) {
-    if (value < 15) return (this.widthInputField.value = 15);
-    this.ground.updateGroundWidth(value);
+    if (+value < 15) return (this.widthInputField.value = 15);
+    const height = +this.heightInputField.value;
+    this.ground.updateGround({ width: +value, height });
   }
 
   updateGroundHeight({ value }) {
-    if (value < 15) return (this.heightInputField.value = 15);
-    this.ground.updateGroundHeight(value);
+    if (+value < 15) return (this.heightInputField.value = 15);
+    const width = +this.widthInputField.value;
+    this.ground.updateGround({ width, height: +value });
   }
+}
 
-  get movementButtons() {
-    return {
-      up: document.getElementById("up"),
-      down: document.getElementById("down"),
-      left: document.getElementById("left"),
-      right: document.getElementById("right"),
-    };
-  }
+function log(msg) {
+  console.log(msg);
 }
 
 INPUT_FOCUSED = false;
@@ -73,10 +69,10 @@ const main = new Start(ground);
 const GROUND_LOCATION = main.groundLocation;
 const GROUND = main.ground;
 
-const dna = new DNA(main.movementButtons);
+const dna = new DNA();
 
 function draw() {
-  dna.draw();
+  // dna.draw();
   setTimeout(() => draw(), 100);
 }
 

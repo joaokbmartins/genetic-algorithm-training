@@ -24,5 +24,6 @@ class Target {
         left: ${this.position.x}px;
       `
     );
+    // console.log(this.position);
   }
 }
