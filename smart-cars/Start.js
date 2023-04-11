@@ -2,14 +2,18 @@ class Start {
   grid = [];
   needUpdateGroundPosition = false;
 
-  ground = null;
+  ground;
 
-  widthInputField = null;
-  heightInputField = null;
+  widthInputField;
+  heightInputField;
 
   constructor(ground) {
-    this.ground = ground;
+    if (ground instanceof Ground) this.ground = ground;
     this.setupInputFieldListeners();
+  }
+
+  static calcSizeInPixels(tileQtd) {
+    return 11 * (tileQtd - 1) + 12;
   }
 
   setupInputFieldListeners() {
@@ -51,10 +55,6 @@ class Start {
     const width = +this.widthInputField.value;
     this.ground.updateGround({ width, height: +value });
   }
-}
-
-function log(msg) {
-  console.log(msg);
 }
 
 INPUT_FOCUSED = false;

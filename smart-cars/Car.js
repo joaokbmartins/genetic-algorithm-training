@@ -1,8 +1,8 @@
 class Car {
   element;
-  position = { x: 0, y: 0 };
+  tilePosition = { x: 0, y: 0 };
 
-  boundaries = null;
+  boundaries;
 
   START_COLUMN = 3;
   moviments = {
@@ -12,10 +12,9 @@ class Car {
     right: null,
   };
 
-  constructor(boundaries) {
-    if (!boundaries) return;
+  constructor() {
     this.element = document.createElement("span");
-    this.boundaries = boundaries;
+    this.boundaries = GROUND.sizeInTales;
 
     this.#addClass();
     this.#setMovementButtons();
@@ -23,7 +22,6 @@ class Car {
     this.#addButtonsListeners();
     this.#listenGroundResize();
     this.#setInitialPosition();
-    this.#setCarLocationStyle();
   }
 
   #addClass() {
@@ -40,13 +38,12 @@ class Car {
   }
 
   resetCarPosition() {
-    const MIDDLE = 2;
-    const { height } = this.boundaries.size;
+    const { height } = this.boundaries;
+    const x = Math.floor(3);
+    const y = Math.floor(height / 2);
 
-    const x = GRID_WIDTH + this.START_COLUMN * TILE;
-    const y = GRID_WIDTH + Math.floor(height / TILE / MIDDLE) * TILE;
-
-    this.position = { x, y };
+    this.tilePosition = { x, y };
+    this.updatePosition();
   }
 
   #setMovementButtons() {
@@ -58,7 +55,7 @@ class Car {
 
   #listenGroundResize() {
     document.addEventListener("ground-resize", ({ detail }) => {
-      console.log(" >>> ", { detail });
+      this.boundaries = detail;
       this.resetCarPosition();
     });
   }
@@ -67,14 +64,20 @@ class Car {
     this.element.setAttribute(
       "style",
       `
-        top: ${this.position.y}px;
-        left: ${this.position.x}px;
+        top: ${Start.calcSizeInPixels(this.tilePosition.y)}px;
+        left: ${Start.calcSizeInPixels(this.tilePosition.x)}px;
       `
     );
   }
 
   moveToPosition({ x, y }) {
-    this.element.setAttribute("style", `top: ${y}px; left: ${x}px;`);
+    this.element.setAttribute(
+      "style",
+      `
+        top: ${Start.calcSizeInPixels(y)}px; 
+        left: ${Start.calcSizeInPixels(x)}px;
+      `
+    );
   }
 
   updatePosition() {
@@ -108,22 +111,26 @@ class Car {
   }
 
   get moveUp() {
-    if (this.position.y <= TILE) return;
-    this.position.y -= TILE;
+    if (this.tilePosition.y <= 0) return;
+    this.tilePosition.y -= 1;
+    this.updatePosition();
   }
 
   get moveRight() {
-    if (this.position.x + TILE >= this.boundaries.size.width) return;
-    this.position.x += TILE;
+    if (this.tilePosition.x >= this.boundaries.width - 1) return;
+    this.tilePosition.x += 1;
+    this.updatePosition();
   }
 
   get moveDown() {
-    if (this.position.y + TILE >= this.boundaries.size.height) return;
-    this.position.y += TILE;
+    if (this.tilePosition.y >= this.boundaries.height - 1) return;
+    this.tilePosition.y += 1;
+    this.updatePosition();
   }
 
   get moveLeft() {
-    if (this.position.x <= TILE) return;
-    this.position.x -= TILE;
+    if (this.tilePosition.x <= 0) return;
+    this.tilePosition.x -= 1;
+    this.updatePosition();
   }
 }

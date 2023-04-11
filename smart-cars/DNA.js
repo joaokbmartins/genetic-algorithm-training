@@ -13,7 +13,7 @@ class DNA {
   constructor() {
     this.#init();
     this.listenGroundResize();
-    this.car = new Car(this.boundaries);
+    this.car = new Car();
     GROUND.addElement(this.car.element);
     this.setFitnessControlButtons();
   }
@@ -71,10 +71,10 @@ class DNA {
     /* STEP 4 */
     console.log("STEP 4: CROSSOVER");
     for (let i = 0; i < this.movementList.length; i++) {
-      // let firstRandomMove = this.nonZeroFitnessMovement();
-      // let secondRandomMove = this.nonZeroFitnessMovement();
-      // console.log(firstRandomMove);
-      // console.log(secondRandomMove);
+      let firstRandomMove = this.nonZeroFitnessMovement();
+      let secondRandomMove = this.nonZeroFitnessMovement();
+      console.log(firstRandomMove);
+      console.log(secondRandomMove);
     }
   }
 
@@ -140,7 +140,7 @@ class DNA {
   get boundaries() {
     return {
       location: GROUND.location,
-      size: GROUND.size,
+      size: GROUND.sizeInTales,
     };
   }
 

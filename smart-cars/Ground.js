@@ -1,11 +1,14 @@
 class Ground {
-  element = null;
-  target = null;
+  element;
+  target;
 
-  width = 0;
-  height = 0;
+  sizeInTales = {
+    width: 50,
+    height: 20,
+  };
 
   constructor() {
+    this.target = new Target();
     this.readGroundElement();
     this.addTarget();
     this.listenGroundResize();
@@ -15,27 +18,24 @@ class Ground {
     this.element = document.getElementById("ground");
   }
 
+  addTarget() {
+    this.addElement(this.target.element);
+    this.setTargetInitialPosition();
+  }
+
   listenGroundResize() {
     document.addEventListener("ground-resize", (event) => {
       this.setTargetInitialPosition();
     });
   }
 
-  addTarget() {
-    this.target = new Target();
-    this.addElement(this.target.element);
-    this.setTargetInitialPosition();
-  }
-
   setTargetInitialPosition() {
-    const MIDDLE = 2;
-    const { width, height } = this.size;
-
-    const position = {
-      x: width - TILE * 5,
-      y: GRID_WIDTH + Math.floor(height / TILE / MIDDLE) * TILE,
+    const { width, height } = this.sizeInTales;
+    const tilePosition = {
+      x: width - 4,
+      y: Math.floor(height / 2),
     };
-    this.target.updatePosition(position);
+    this.target.updatePosition(tilePosition);
   }
 
   addElement(element) {
@@ -43,10 +43,7 @@ class Ground {
   }
 
   get size() {
-    return {
-      width: this.element.offsetWidth,
-      height: this.element.offsetHeight,
-    };
+    return this.sizeInTales;
   }
 
   get location() {
@@ -63,12 +60,14 @@ class Ground {
   }
 
   updateGround({ width, height }) {
+    this.sizeInTales.width = width;
+    this.sizeInTales.height = height;
     this.needUpdateGroundPosition = true;
     this.element.setAttribute(
       "style",
       `
-        width: calc((11px * ${width - 1}) + 12px);
-        height: calc((11px * ${height - 1}) + 12px);
+        width: ${Start.calcSizeInPixels(width)}px;
+        height: ${Start.calcSizeInPixels(height)}px;
       `
     );
     this.emitGroundResize({ width, height });

@@ -1,6 +1,6 @@
 class Target {
   element = null;
-  position = { x: 0, y: 0 };
+  tilePosition = { x: 0, y: 0 };
 
   constructor() {
     this.createElement();
@@ -11,8 +11,8 @@ class Target {
     this.element.setAttribute("class", "target");
   }
 
-  updatePosition(position) {
-    this.position = position;
+  updatePosition(tilePosition) {
+    this.tilePosition = tilePosition;
     this.draw();
   }
 
@@ -20,10 +20,9 @@ class Target {
     this.element.setAttribute(
       "style",
       `
-        top: ${this.position.y}px;
-        left: ${this.position.x}px;
+        top: ${Start.calcSizeInPixels(this.tilePosition.y)}px;
+        left: ${Start.calcSizeInPixels(this.tilePosition.x)}px;
       `
     );
-    // console.log(this.position);
   }
 }
